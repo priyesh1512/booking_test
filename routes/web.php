@@ -20,11 +20,11 @@ Route::get('/', function () {
 });
 
 // Authentication Routes
-Route::get('register', [AuthController::class, 'showRegistrationForm'])->name('register');
-Route::post('register', [AuthController::class, 'register']);
-Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('auth/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('auth/register', [AuthController::class, 'register']);
+Route::get('auth/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('auth/login', [AuthController::class, 'login']);
+Route::post('auth/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Admin Routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
