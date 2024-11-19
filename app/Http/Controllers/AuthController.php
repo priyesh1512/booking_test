@@ -21,14 +21,16 @@ class AuthController extends Controller
      * Handle the registration request.
      */
     public function register(Request $request)
-    {   
+    {
+        // Validate incoming request data
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,user',
+            'role' => 'required|in:admin,user', // Ensure role is either 'admin' or 'user'
         ]);
 
+        // Create the user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -36,13 +38,14 @@ class AuthController extends Controller
             'role' => $request->role,
         ]);
 
+        // Log the user in
         Auth::login($user);
 
         // Redirect based on role
         if ($user->role === 'admin') {
-            return redirect()->route('admin.hotels.index');
+            return redirect()->route('admin.hotels.index')->with('success', 'Welcome Admin!');
         } else {
-            return redirect()->route('user.dashboard');
+            return redirect()->route('user.dashboard')->with('success', 'Welcome!');
         }
     }
 
@@ -58,26 +61,29 @@ class AuthController extends Controller
      * Handle the login request.
      */
     public function login(Request $request)
-    {   
+    {
+        // Validate incoming request data
         $credentials = $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
 
+        // Attempt to authenticate the user
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
             $user = Auth::user();
             if ($user->role === 'admin') {
-                return redirect()->route('admin.hotels.index');
+                return redirect()->route('admin.hotels.index')->with('success', 'Logged in as Admin!');
             } else {
-                return redirect()->route('user.dashboard');
+                return redirect()->route('user.dashboard')->with('success', 'Logged in successfully!');
             }
         }
 
+        // Authentication failed
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
-        ]);
+        ])->onlyInput('email');
     }
 
     /**
@@ -90,6 +96,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Logged out successfully!');
     }
 }
