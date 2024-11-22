@@ -13,21 +13,18 @@ class RoleMiddleware
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string  $role  The role to check against (e.g., 'admin', 'user')
+     * @param  string|array  $roles
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
-        // Check if the user is authenticated
         if (!Auth::check()) {
             return redirect()->route('login')->withErrors(['You must be logged in to access this page.']);
         }
 
-        // Retrieve the authenticated user
         $user = Auth::user();
 
-        // Check if the user has the required role
-        if ($user->role !== $role) {
+        if (!in_array($user->role, $roles)) {
             abort(403, 'Unauthorized action.');
         }
 
