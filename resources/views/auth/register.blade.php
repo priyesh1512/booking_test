@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Register</h1>
+<div class="container" style="max-width: 600px; margin: 40px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h1 style="color: #2c3e50; text-align: center; margin-bottom: 30px;">Register</h1>
     <form action="{{ route('register') }}" method="POST">
         @csrf
         <div class="mb-3">
@@ -40,7 +40,7 @@
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; background-color: #3498db; border: none; font-weight: bold; margin-top: 20px;">Register</button>
     </form>
 </div>
 @endsection
